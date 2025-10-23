@@ -1,0 +1,147 @@
+{
+  "language": "JavaScript",
+  "totalQuestions": 10,
+  "difficulty": "mixed",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Quelle est la différence entre let, const et var?",
+      "options": [
+        "let et const ont un scope de bloc, var a un scope de fonction",
+        "Aucune différence",
+        "var est plus rapide",
+        "const ne peut jamais être modifié"
+      ],
+      "correctAnswer": 0,
+      "explanation": "let et const sont block-scoped (ES6+), var est function-scoped. const empêche la réassignation mais permet la mutation d'objets.",
+      "category": "Variables",
+      "difficulty": "easy"
+    },
+    {
+      "id": 2,
+      "question": "Qu'est-ce qu'une closure en JavaScript?",
+      "options": [
+        "Une fonction qui a accès aux variables de son scope parent",
+        "Une boucle fermée",
+        "Un objet immutable",
+        "Une classe abstraite"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Une closure est une fonction qui 'capture' les variables de son environnement lexical, même après que la fonction externe ait terminé.",
+      "category": "Functions",
+      "difficulty": "medium"
+    },
+    {
+      "id": 3,
+      "question": "Que fait Promise.all()?",
+      "options": [
+        "Attend que toutes les promesses soient résolues",
+        "Exécute les promesses en séquence",
+        "Crée une nouvelle promesse",
+        "Annule toutes les promesses"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Promise.all() attend que toutes les promesses du tableau soient résolues, ou rejette si l'une d'elles est rejetée.",
+      "category": "Async",
+      "difficulty": "medium"
+    },
+    {
+      "id": 4,
+      "question": "Quelle est la différence entre == et ===?",
+      "options": [
+        "=== compare valeur ET type, == convertit les types",
+        "Aucune différence",
+        "== est plus stricte",
+        "=== n'existe pas"
+      ],
+      "correctAnswer": 0,
+      "explanation": "=== (strict equality) compare valeur et type sans conversion. == (loose equality) effectue une coercition de type.",
+      "category": "Operators",
+      "difficulty": "easy"
+    },
+    {
+      "id": 5,
+      "question": "Que fait async/await?",
+      "options": [
+        "Simplifie l'écriture de code asynchrone avec des promesses",
+        "Crée des threads parallèles",
+        "Bloque l'exécution du code",
+        "Améliore les performances"
+      ],
+      "correctAnswer": 0,
+      "explanation": "async/await est du sucre syntaxique pour travailler avec des promesses de manière plus lisible, sans changer le comportement asynchrone.",
+      "category": "Async",
+      "difficulty": "medium"
+    },
+    {
+      "id": 6,
+      "question": "Qu'est-ce que l'event loop?",
+      "options": [
+        "Mécanisme qui gère les callbacks asynchrones",
+        "Une boucle for infinie",
+        "Un écouteur d'événements",
+        "Une méthode de tableau"
+      ],
+      "correctAnswer": 0,
+      "explanation": "L'event loop surveille la call stack et la callback queue, et exécute les callbacks quand la stack est vide.",
+      "category": "Concurrency",
+      "difficulty": "hard"
+    },
+    {
+      "id": 7,
+      "question": "Que fait la méthode map() sur un tableau?",
+      "options": [
+        "Crée un nouveau tableau en appliquant une fonction à chaque élément",
+        "Modifie le tableau original",
+        "Filtre les éléments",
+        "Trie le tableau"
+      ],
+      "correctAnswer": 0,
+      "explanation": "map() applique une fonction de transformation à chaque élément et retourne un nouveau tableau. Le tableau original n'est pas modifié.",
+      "category": "Arrays",
+      "difficulty": "easy"
+    },
+    {
+      "id": 8,
+      "question": "Qu'est-ce que le destructuring?",
+      "options": [
+        "Syntaxe pour extraire des valeurs d'objets/tableaux",
+        "Suppression d'un objet",
+        "Optimisation du code",
+        "Une méthode de tri"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Le destructuring permet d'extraire des propriétés d'objets ou éléments de tableaux dans des variables distinctes: const {a, b} = obj",
+      "category": "ES6+",
+      "difficulty": "medium"
+    },
+    {
+      "id": 9,
+      "question": "Que signifie 'this' en JavaScript?",
+      "options": [
+        "Référence à l'objet contexte d'exécution",
+        "Toujours l'objet window",
+        "Toujours undefined",
+        "Une constante"
+      ],
+      "correctAnswer": 0,
+      "explanation": "La valeur de 'this' dépend du contexte d'appel: objet appelant, global (window/undefined), ou bind/call/apply.",
+      "category": "Context",
+      "difficulty": "hard"
+    },
+    {
+      "id": 10,
+      "question": "Qu'est-ce qu'une arrow function?",
+      "options": [
+        "Syntaxe concise pour déclarer des fonctions (ES6)",
+        "Une fonction qui pointe vers un objet",
+        "Une méthode de tri",
+        "Un type de boucle"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Les arrow functions (=>) ont une syntaxe plus courte et ne lient pas leur propre 'this' (lexical binding).",
+      "category": "Functions",
+      "difficulty": "easy"
+    }
+  ]
+}

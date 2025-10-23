@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Orale AI - AI Interview Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2 { font-family: 'Playfair Display', serif; }
+        
+        .voice-wave {
+            width: 10px;
+            height: 30px;
+            background: linear-gradient(to bottom, #001F3F, #27AE60);
+            margin: 0 3px;
+            border-radius: 5px;
+            animation: wave 1s infinite ease-in-out;
+        }
+        
+        .voice-wave:nth-child(2) { animation-delay: 0.1s; }
+        .voice-wave:nth-child(3) { animation-delay: 0.2s; }
+        .voice-wave:nth-child(4) { animation-delay: 0.3s; }
+        .voice-wave:nth-child(5) { animation-delay: 0.4s; }
+        
+        @keyframes wave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(2); }
+        }
+        
+        .recording { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <nav class="bg-white shadow-sm">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <a href="dashboard-student.html" class="text-gray-600 hover:text-gray-800">← Retour</a>
+                </div>
+                <span class="text-lg font-bold text-gray-800">Interview Orale AI</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-12 max-w-4xl">
+        <!-- Interview Container -->
+        <div class="bg-white rounded-3xl shadow-2xl p-12">
+            <!-- Progress -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+                    <span>Question <span id="currentQuestion">1</span> sur 5</span>
+                    <span id="timer">00:00</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progressBar" class="bg-gradient-to-r from-blue-900 to-green-600 h-2 rounded-full transition-all duration-500" style="width: 20%"></div>
+                </div>
+            </div>
+
+            <!-- Question Display -->
+            <div id="questionSection" class="text-center mb-12">
+                <div class="text-6xl mb-6">🎤</div>
+                <h2 id="questionText" class="text-3xl font-bold text-gray-800 mb-4">
+                    Parlez-moi de votre meilleur projet en développement
+                </h2>
+                <p class="text-gray-600 text-lg">
+                    Prenez le temps de structurer votre réponse. Nous analysons votre communication en temps réel.
+                </p>
+            </div>
+
+            <!-- Voice Visualizer -->
+            <div id="voiceVisualizer" class="hidden flex justify-center items-center mb-8 h-24">
+                <div class="voice-wave"></div>
+                <div class="voice-wave"></div>
+                <div class="voice-wave"></div>
+                <div class="voice-wave"></div>
+                <div class="voice-wave"></div>
+            </div>
+
+            <!-- Transcript -->
+            <div id="transcriptSection" class="hidden mb-8">
+                <div class="bg-gray-50 rounded-xl p-6 max-h-48 overflow-y-auto">
+                    <h3 class="font-bold text-gray-800 mb-3">📝 Transcription en temps réel:</h3>
+                    <p id="transcript" class="text-gray-700"></p>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="flex justify-center gap-4">
+                <button id="startBtn" onclick="startRecording()" class="px-8 py-4 bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-xl font-semibold hover:shadow-xl transition transform hover:scale-105 flex items-center space-x-2">
+                    <span class="text-2xl">🎤</span>
+                    <span>Commencer à Répondre</span>
+                </button>
+                
+                <button id="stopBtn" onclick="stopRecording()" class="hidden px-8 py-4 bg-red-600 text-white rounded-xl font-semibold hover:shadow-xl transition transform hover:scale-105 recording flex items-center space-x-2">
+                    <span class="text-2xl">⏹</span>
+                    <span>Arrêter</span>
+                </button>
+                
+                <button id="nextBtn" onclick="nextQuestion()" class="hidden px-8 py-4 bg-green-600 text-white rounded-xl font-semibold hover:shadow-xl transition transform hover:scale-105 flex items-center space-x-2">
+                    <span>Question Suivante</span>
+                    <span class="text-2xl">→</span>
+                </button>
+            </div>
+
+            <!-- Tips -->
+            <div class="mt-8 p-6 bg-blue-50 rounded-xl">
+                <h3 class="font-bold text-blue-900 mb-2">💡 Conseils:</h3>
+                <ul class="text-sm text-blue-800 space-y-1">
+                    <li>• Utilisez la méthode STAR (Situation, Tâche, Action, Résultat)</li>
+                    <li>• Parlez clairement et à un rythme modéré</li>
+                    <li>• Donnez des exemples concrets et mesurables</li>
+                    <li>• Soyez authentique et confiant</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/firebase-config.js"></script>
+    <script>
+        const questions = [
+            "Parlez-moi de votre meilleur projet en développement",
+            "Comment gérez-vous les conflits dans une équipe?",
+            "Décrivez un défi technique que vous avez surmonté",
+            "Pourquoi souhaitez-vous travailler dans notre entreprise?",
+            "Quels sont vos objectifs de carrière à 5 ans?"
+        ];
+
+        let currentQ = 0;
+        let recognition = null;
+        let transcript = '';
+        let responses = [];
+        let startTime = null;
+        let timerInterval = null;
+
+        // Initialize Speech Recognition
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'fr-FR';
+
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcriptText = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        transcript += transcriptText + ' ';
+                    } else {
+                        interimTranscript += transcriptText;
+                    }
+                }
+                document.getElementById('transcript').textContent = transcript + interimTranscript;
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+            };
+        }
+
+        function startRecording() {
+            if (!recognition) {
+                alert('Votre navigateur ne supporte pas la reconnaissance vocale. Utilisez Chrome ou Edge.');
+                return;
+            }
+
+            document.getElementById('startBtn').classList.add('hidden');
+            document.getElementById('stopBtn').classList.remove('hidden');
+            document.getElementById('voiceVisualizer').classList.remove('hidden');
+            document.getElementById('transcriptSection').classList.remove('hidden');
+
+            transcript = '';
+            startTime = Date.now();
+            
+            // Start timer
+            timerInterval = setInterval(updateTimer, 1000);
+            
+            recognition.start();
+        }
+
+        function stopRecording() {
+            if (recognition) {
+                recognition.stop();
+            }
+
+            clearInterval(timerInterval);
+
+            document.getElementById('stopBtn').classList.add('hidden');
+            document.getElementById('nextBtn').classList.remove('hidden');
+            document.getElementById('voiceVisualizer').classList.add('hidden');
+
+            // Save response
+            const duration = Math.floor((Date.now() - startTime) / 1000);
+            responses.push({
+                question: questions[currentQ],
+                answer: transcript,
+                duration: duration
+            });
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            
+            if (currentQ >= questions.length) {
+                finishInterview();
+                return;
+            }
+
+            // Update UI
+            document.getElementById('currentQuestion').textContent = currentQ + 1;
+            document.getElementById('questionText').textContent = questions[currentQ];
+            document.getElementById('progressBar').style.width = ((currentQ + 1) / questions.length * 100) + '%';
+            
+            // Reset controls
+            document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('startBtn').classList.remove('hidden');
+            document.getElementById('transcriptSection').classList.add('hidden');
+            document.getElementById('transcript').textContent = '';
+            document.getElementById('timer').textContent = '00:00';
+        }
+
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const seconds = (elapsed % 60).toString().padStart(2, '0');
+            document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+        }
+
+        async function finishInterview() {
+            // Calculate scores (mock AI analysis)
+            const totalWords = responses.reduce((sum, r) => sum + r.answer.split(' ').length, 0);
+            const avgDuration = responses.reduce((sum, r) => sum + r.duration, 0) / responses.length;
+            
+            const score = {
+                overall: Math.min(95, 60 + Math.floor(totalWords / 10)),
+                communication: Math.min(100, 70 + Math.floor(totalWords / 15)),
+                structure: Math.min(100, 65 + Math.floor(avgDuration / 2)),
+                confidence: Math.min(100, 75 + Math.floor(totalWords / 12))
+            };
+
+            // Save to Realtime Database
+            const user = firebase.auth().currentUser;
+            if (user) {
+                const interviewId = Date.now().toString();
+                await firebase.database().ref('interviews/' + interviewId).set({
+                    userId: user.uid,
+                    type: 'oral',
+                    responses: responses,
+                    score: score,
+                    completedAt: new Date().toISOString()
+                });
+            }
+
+            // Redirect to report
+            localStorage.setItem('lastInterviewScore', JSON.stringify(score));
+            window.location.href = 'report-oral.html';
+        }
+
+        // GSAP Animation
+        gsap.from('#questionSection', {
+            opacity: 0,
+            y: 30,
+            duration: 1,
+            ease: 'power3.out'
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport Interview Orale - AI Interview Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <nav class="bg-white shadow-sm no-print">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="dashboard-student.html" class="text-gray-600 hover:text-gray-800">← Retour au Dashboard</a>
+                <button onclick="window.print()" class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition">
+                    📄 Télécharger PDF
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-12 max-w-5xl">
+        <div class="bg-white rounded-3xl shadow-2xl p-12">
+            <!-- Header -->
+            <div class="text-center mb-12 report-header">
+                <div class="text-6xl mb-4">🎤</div>
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">Rapport d'Interview Orale</h1>
+                <p class="text-gray-600 text-lg">Analyse AI de votre communication</p>
+                <p class="text-sm text-gray-500 mt-2" id="reportDate"></p>
+            </div>
+
+            <!-- Overall Score -->
+            <div class="mb-12 text-center">
+                <div class="inline-block p-8 bg-gradient-to-br from-blue-900 to-green-600 rounded-3xl text-white">
+                    <div class="text-lg font-semibold mb-2">Score Global</div>
+                    <div class="text-7xl font-bold" id="overallScore">--</div>
+                    <div class="text-xl mt-2">sur 100</div>
+                </div>
+            </div>
+
+            <!-- Scores by Category -->
+            <div class="grid md:grid-cols-3 gap-6 mb-12">
+                <div class="score-card bg-blue-50 rounded-2xl p-6 text-center">
+                    <div class="text-4xl mb-3">💬</div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Communication</h3>
+                    <div class="text-4xl font-bold text-blue-600" id="commScore">--</div>
+                    <div class="text-sm text-gray-600 mt-2">/100</div>
+                </div>
+                
+                <div class="score-card bg-green-50 rounded-2xl p-6 text-center">
+                    <div class="text-4xl mb-3">📋</div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Structure</h3>
+                    <div class="text-4xl font-bold text-green-600" id="structureScore">--</div>
+                    <div class="text-sm text-gray-600 mt-2">/100</div>
+                </div>
+                
+                <div class="score-card bg-purple-50 rounded-2xl p-6 text-center">
+                    <div class="text-4xl mb-3">💪</div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2">Confiance</h3>
+                    <div class="text-4xl font-bold text-purple-600" id="confidenceScore">--</div>
+                    <div class="text-sm text-gray-600 mt-2">/100</div>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">📊 Analyse Détaillée</h2>
+                <canvas id="scoreChart" height="100"></canvas>
+            </div>
+
+            <!-- Strengths -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                    <span class="text-3xl mr-3">✅</span> Points Forts
+                </h2>
+                <div class="bg-green-50 rounded-xl p-6">
+                    <ul id="strengthsList" class="space-y-3 text-gray-800">
+                        <li>Chargement...</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Improvements -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                    <span class="text-3xl mr-3">💡</span> Axes d'Amélioration
+                </h2>
+                <div class="bg-orange-50 rounded-xl p-6">
+                    <ul id="improvementsList" class="space-y-3 text-gray-800">
+                        <li>Chargement...</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                    <span class="text-3xl mr-3">🎯</span> Recommandations AI
+                </h2>
+                <div class="bg-blue-50 rounded-xl p-6">
+                    <div class="space-y-4 text-gray-800">
+                        <div class="flex items-start space-x-3">
+                            <div class="text-2xl">📚</div>
+                            <div>
+                                <h3 class="font-bold mb-1">Pratiquez la méthode STAR</h3>
+                                <p class="text-sm text-gray-700">Structurez vos réponses: Situation, Tâche, Action, Résultat</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="text-2xl">🗣️</div>
+                            <div>
+                                <h3 class="font-bold mb-1">Améliorez votre clarté vocale</h3>
+                                <p class="text-sm text-gray-700">Parlez à un rythme modéré et articulez bien</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="text-2xl">💪</div>
+                            <div>
+                                <h3 class="font-bold mb-1">Renforcez votre confiance</h3>
+                                <p class="text-sm text-gray-700">Pratiquez régulièrement pour gagner en assurance</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="text-center no-print">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Prochaines Étapes</h2>
+                <div class="flex justify-center gap-4">
+                    <a href="interview-oral.html" class="px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition">
+                        🔄 Refaire une Interview
+                    </a>
+                    <a href="interview-tech.html" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                        💻 Quiz Technique
+                    </a>
+                    <a href="dashboard-student.html" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                        🏠 Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="mt-12 p-4 bg-gray-100 rounded-xl text-center text-sm text-gray-600">
+                ⚠️ <strong>Disclaimer:</strong> Cette analyse AI est à but éducatif. Pour un feedback professionnel, consultez un expert en recrutement.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load score from localStorage
+        const scoreData = JSON.parse(localStorage.getItem('lastInterviewScore') || '{}');
+        
+        if (scoreData.overall) {
+            document.getElementById('overallScore').textContent = scoreData.overall;
+            document.getElementById('commScore').textContent = scoreData.communication;
+            document.getElementById('structureScore').textContent = scoreData.structure;
+            document.getElementById('confidenceScore').textContent = scoreData.confidence;
+        }
+
+        // Set date
+        document.getElementById('reportDate').textContent = new Date().toLocaleDateString('fr-FR', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Populate strengths
+        const strengthsList = document.getElementById('strengthsList');
+        const strengths = [
+            'Excellente clarté dans la communication',
+            'Bonne utilisation de la méthode STAR pour structurer les réponses',
+            'Exemples concrets et pertinents',
+            'Réponses bien structurées et cohérentes'
+        ];
+        strengthsList.innerHTML = strengths.map(s => `<li class="flex items-start"><span class="text-green-600 mr-2">✓</span><span>${s}</span></li>`).join('');
+
+        // Populate improvements
+        const improvementsList = document.getElementById('improvementsList');
+        const improvements = [
+            'Donnez plus de détails sur vos réalisations techniques',
+            'Améliorez le rythme de parole (un peu trop rapide)',
+            'Ajoutez des métriques chiffrées pour montrer l\'impact'
+        ];
+        improvementsList.innerHTML = improvements.map(i => `<li class="flex items-start"><span class="text-orange-600 mr-2">•</span><span>${i}</span></li>`).join('');
+
+        // Create chart
+        const ctx = document.getElementById('scoreChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Communication', 'Structure', 'Confiance', 'Technique'],
+                datasets: [{
+                    label: 'Score',
+                    data: [
+                        scoreData.communication || 0,
+                        scoreData.structure || 0,
+                        scoreData.confidence || 0,
+                        scoreData.overall || 0
+                    ],
+                    backgroundColor: ['#001F3F', '#27AE60', '#9B59B6', '#3498DB'],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // GSAP Animations
+        gsap.from('.report-header', { opacity: 0, y: 30, duration: 1, ease: 'power3.out' });
+        gsap.from('.score-card', { opacity: 0, y: 30, stagger: 0.2, duration: 0.8, delay: 0.3 });
+    </script>
+</body>
+</html>

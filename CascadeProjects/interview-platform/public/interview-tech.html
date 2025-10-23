@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Technique - AI Interview Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2 { font-family: 'Playfair Display', serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-blue-50 min-h-screen">
+    <nav class="bg-white shadow-sm">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="dashboard-student.html" class="text-gray-600 hover:text-gray-800">← Retour</a>
+                <span class="text-lg font-bold text-gray-800">Quiz Technique</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Language Selection -->
+    <div id="languageSelection" class="container mx-auto px-6 py-12 max-w-4xl">
+        <div class="bg-white rounded-3xl shadow-2xl p-12 text-center">
+            <div class="text-6xl mb-6">💻</div>
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Choisissez votre langage</h1>
+            <p class="text-gray-600 text-lg mb-12">Sélectionnez un langage de programmation pour commencer le quiz (25-30 questions)</p>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <button onclick="startQuiz('java')" class="lang-card p-8 bg-gradient-to-br from-red-50 to-orange-50 border-2 border-red-200 rounded-2xl hover:shadow-xl transition transform hover:scale-105">
+                    <div class="text-6xl mb-4">☕</div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Java</h2>
+                    <p class="text-gray-600">OOP, Collections, Streams, Design Patterns</p>
+                    <div class="mt-4 text-sm text-gray-500">30 questions • 45 min</div>
+                </button>
+                
+                <button onclick="startQuiz('cpp')" class="lang-card p-8 bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl hover:shadow-xl transition transform hover:scale-105">
+                    <div class="text-6xl mb-4">⚡</div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">C++</h2>
+                    <p class="text-gray-600">Pointers, Memory, STL, Templates</p>
+                    <div class="mt-4 text-sm text-gray-500">25 questions • 40 min</div>
+                </button>
+                
+                <button onclick="startQuiz('javascript')" class="lang-card p-8 bg-gradient-to-br from-yellow-50 to-amber-50 border-2 border-yellow-200 rounded-2xl hover:shadow-xl transition transform hover:scale-105">
+                    <div class="text-6xl mb-4">🌐</div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">JavaScript</h2>
+                    <p class="text-gray-600">Async, Promises, ES6+, DOM</p>
+                    <div class="mt-4 text-sm text-gray-500">30 questions • 45 min</div>
+                </button>
+                
+                <button onclick="startQuiz('python')" class="lang-card p-8 bg-gradient-to-br from-green-50 to-teal-50 border-2 border-green-200 rounded-2xl hover:shadow-xl transition transform hover:scale-105">
+                    <div class="text-6xl mb-4">🐍</div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Python</h2>
+                    <p class="text-gray-600">Data Structures, Decorators, Generators</p>
+                    <div class="mt-4 text-sm text-gray-500">28 questions • 45 min</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Section -->
+    <div id="quizSection" class="hidden container mx-auto px-6 py-12 max-w-4xl">
+        <div class="bg-white rounded-3xl shadow-2xl p-12">
+            <!-- Progress -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+                    <span>Question <span id="currentQuestion">1</span> sur <span id="totalQuestions">30</span></span>
+                    <span id="timer">45:00</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progressBar" class="bg-gradient-to-r from-green-600 to-blue-700 h-2 rounded-full transition-all duration-300" style="width: 3%"></div>
+                </div>
+            </div>
+
+            <!-- Question -->
+            <div class="mb-8">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span id="categoryBadge" class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">OOP</span>
+                    <span id="difficultyBadge" class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Easy</span>
+                </div>
+                <h2 id="questionText" class="text-2xl font-bold text-gray-800 mb-6">
+                    Chargement de la question...
+                </h2>
+                
+                <!-- Options -->
+                <div id="optionsContainer" class="space-y-4">
+                    <!-- Options will be dynamically generated -->
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex justify-between items-center">
+                <button id="prevBtn" onclick="previousQuestion()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition disabled:opacity-50" disabled>
+                    ← Précédent
+                </button>
+                
+                <div class="text-center">
+                    <button id="flagBtn" onclick="toggleFlag()" class="px-4 py-2 text-gray-600 hover:text-yellow-600 transition">
+                        <span id="flagIcon">🏴</span> Signaler
+                    </button>
+                </div>
+                
+                <button id="nextBtn" onclick="nextQuestion()" class="px-6 py-3 bg-gradient-to-r from-green-600 to-blue-700 text-white rounded-lg hover:shadow-xl transition transform hover:scale-105">
+                    Suivant →
+                </button>
+                
+                <button id="submitBtn" onclick="submitQuiz()" class="hidden px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-700 text-white rounded-lg hover:shadow-xl transition transform hover:scale-105">
+                    Terminer le Quiz
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/firebase-config.js"></script>
+    <script>
+        let quizData = null;
+        let currentLanguage = '';
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let flaggedQuestions = [];
+        let startTime = null;
+        let timerInterval = null;
+        let timeRemaining = 45 * 60; // 45 minutes in seconds
+
+        async function startQuiz(language) {
+            currentLanguage = language;
+            
+            // Load quiz data
+            try {
+                const response = await fetch(`data/quiz-${language}.json`);
+                quizData = await response.json();
+                
+                // Initialize arrays
+                userAnswers = new Array(quizData.questions.length).fill(null);
+                flaggedQuestions = new Array(quizData.questions.length).fill(false);
+                
+                // Show quiz section
+                document.getElementById('languageSelection').classList.add('hidden');
+                document.getElementById('quizSection').classList.remove('hidden');
+                
+                // Start timer
+                startTime = Date.now();
+                timerInterval = setInterval(updateTimer, 1000);
+                
+                // Load first question
+                loadQuestion(0);
+            } catch (error) {
+                console.error('Error loading quiz:', error);
+                alert('Erreur lors du chargement du quiz. Vérifiez que le fichier existe.');
+            }
+        }
+
+        function loadQuestion(index) {
+            const question = quizData.questions[index];
+            
+            document.getElementById('currentQuestion').textContent = index + 1;
+            document.getElementById('totalQuestions').textContent = quizData.questions.length;
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('categoryBadge').textContent = question.category;
+            document.getElementById('difficultyBadge').textContent = question.difficulty;
+            
+            // Update difficulty badge color
+            const diffBadge = document.getElementById('difficultyBadge');
+            diffBadge.className = 'px-3 py-1 rounded-full text-sm font-medium';
+            if (question.difficulty === 'easy') {
+                diffBadge.classList.add('bg-green-100', 'text-green-800');
+            } else if (question.difficulty === 'medium') {
+                diffBadge.classList.add('bg-yellow-100', 'text-yellow-800');
+            } else {
+                diffBadge.classList.add('bg-red-100', 'text-red-800');
+            }
+            
+            // Load options
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, i) => {
+                const isSelected = userAnswers[index] === i;
+                const optionDiv = document.createElement('div');
+                optionDiv.className = `p-4 border-2 rounded-xl cursor-pointer transition ${isSelected ? 'border-blue-600 bg-blue-50' : 'border-gray-300 hover:border-blue-400'}`;
+                optionDiv.onclick = () => selectOption(i);
+                optionDiv.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-6 h-6 rounded-full border-2 ${isSelected ? 'border-blue-600 bg-blue-600' : 'border-gray-400'} flex items-center justify-center">
+                            ${isSelected ? '<div class="w-3 h-3 bg-white rounded-full"></div>' : ''}
+                        </div>
+                        <span class="text-gray-800">${option}</span>
+                    </div>
+                `;
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            // Update progress bar
+            const progress = ((index + 1) / quizData.questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // Update buttons
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').classList.toggle('hidden', index === quizData.questions.length - 1);
+            document.getElementById('submitBtn').classList.toggle('hidden', index !== quizData.questions.length - 1);
+            
+            // Update flag icon
+            document.getElementById('flagIcon').textContent = flaggedQuestions[index] ? '🚩' : '🏴';
+        }
+
+        function selectOption(optionIndex) {
+            userAnswers[currentQuestionIndex] = optionIndex;
+            loadQuestion(currentQuestionIndex);
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion(currentQuestionIndex);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < quizData.questions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex);
+            }
+        }
+
+        function toggleFlag() {
+            flaggedQuestions[currentQuestionIndex] = !flaggedQuestions[currentQuestionIndex];
+            document.getElementById('flagIcon').textContent = flaggedQuestions[currentQuestionIndex] ? '🚩' : '🏴';
+        }
+
+        function updateTimer() {
+            timeRemaining--;
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                submitQuiz();
+                return;
+            }
+            
+            const minutes = Math.floor(timeRemaining / 60).toString().padStart(2, '0');
+            const seconds = (timeRemaining % 60).toString().padStart(2, '0');
+            document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+            
+            // Warning at 5 minutes
+            if (timeRemaining === 300) {
+                alert('⏰ Plus que 5 minutes!');
+            }
+        }
+
+        async function submitQuiz() {
+            clearInterval(timerInterval);
+            
+            // Calculate score
+            let correctCount = 0;
+            const categoryScores = {};
+            
+            quizData.questions.forEach((question, index) => {
+                if (userAnswers[index] === question.correctAnswer) {
+                    correctCount++;
+                }
+                
+                // Track category scores
+                if (!categoryScores[question.category]) {
+                    categoryScores[question.category] = { correct: 0, total: 0 };
+                }
+                categoryScores[question.category].total++;
+                if (userAnswers[index] === question.correctAnswer) {
+                    categoryScores[question.category].correct++;
+                }
+            });
+            
+            const score = Math.round((correctCount / quizData.questions.length) * 100);
+            const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+            
+            const result = {
+                language: currentLanguage,
+                score: score,
+                correctCount: correctCount,
+                totalQuestions: quizData.questions.length,
+                categoryScores: categoryScores,
+                timeTaken: timeTaken,
+                userAnswers: userAnswers,
+                flaggedQuestions: flaggedQuestions
+            };
+            
+            // Save to Realtime Database
+            const user = firebase.auth().currentUser;
+            if (user) {
+                const interviewId = Date.now().toString();
+                await firebase.database().ref('interviews/' + interviewId).set({
+                    userId: user.uid,
+                    type: 'technical',
+                    result: result,
+                    completedAt: new Date().toISOString()
+                });
+            }
+            
+            // Save to localStorage for report
+            localStorage.setItem('lastQuizResult', JSON.stringify(result));
+            localStorage.setItem('lastQuizData', JSON.stringify(quizData));
+            
+            // Redirect to report
+            window.location.href = 'report-tech.html';
+        }
+    </script>
+</body>
+</html>

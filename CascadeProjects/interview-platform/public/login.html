@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - AI Interview Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2 { font-family: 'Playfair Display', serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-gray-100 min-h-screen flex items-center justify-center p-6">
+    <div class="max-w-md w-full">
+        <div class="bg-white rounded-3xl shadow-2xl p-8">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-900 to-blue-700 rounded-2xl mx-auto mb-4 flex items-center justify-center text-white text-3xl">🎯</div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Connexion</h1>
+                <p class="text-gray-600">Accédez à votre plateforme d'interviews</p>
+            </div>
+
+            <div id="alert" class="hidden mb-6 p-4 rounded-lg"></div>
+
+            <form id="loginForm">
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-medium mb-2">Email</label>
+                    <input type="email" id="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="votre@email.com">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-medium mb-2">Mot de passe</label>
+                    <input type="password" id="password" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="••••••••">
+                </div>
+
+                <button type="submit" id="loginBtn" class="w-full bg-gradient-to-r from-blue-900 to-blue-700 text-white py-3 rounded-lg font-semibold hover:shadow-xl transition transform hover:scale-105">
+                    Se connecter
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-gray-600 text-sm">Pas encore de compte? <a href="signup.html" class="text-blue-700 font-medium hover:underline">S'inscrire</a></p>
+            </div>
+
+            <div class="mt-6">
+                <button id="googleBtn" class="w-full border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-50 transition flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    Continuer avec Google
+                </button>
+            </div>
+
+            <div class="mt-6 text-center">
+                <a href="index.html" class="text-sm text-gray-600 hover:text-blue-700">← Retour à l'accueil</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/firebase-config.js"></script>
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const alertDiv = document.getElementById('alert');
+        const loginBtn = document.getElementById('loginBtn');
+        const googleBtn = document.getElementById('googleBtn');
+
+        function showAlert(message, type = 'error') {
+            alertDiv.className = `mb-6 p-4 rounded-lg ${type === 'error' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`;
+            alertDiv.textContent = message;
+            alertDiv.classList.remove('hidden');
+        }
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Connexion...';
+
+            try {
+                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                // Get user role from Realtime Database
+                const userSnapshot = await firebase.database().ref('users/' + user.uid).once('value');
+                const userData = userSnapshot.val();
+                
+                showAlert('Connexion réussie! Redirection...', 'success');
+                
+                setTimeout(() => {
+                    if (userData.role === 'recruiter') {
+                        window.location.href = 'dashboard-recruiter.html';
+                    } else {
+                        window.location.href = 'dashboard-student.html';
+                    }
+                }, 1000);
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert(error.message);
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Se connecter';
+            }
+        });
+
+        googleBtn.addEventListener('click', async () => {
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const result = await firebase.auth().signInWithPopup(provider);
+                const user = result.user;
+
+                // Check if user exists in Realtime Database
+                const userSnapshot = await firebase.database().ref('users/' + user.uid).once('value');
+                
+                if (!userSnapshot.exists()) {
+                    // Redirect to complete profile
+                    window.location.href = 'signup.html?google=true';
+                } else {
+                    const userData = userSnapshot.val();
+                    window.location.href = userData.role === 'recruiter' ? 'dashboard-recruiter.html' : 'dashboard-student.html';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert(error.message);
+            }
+        });
+    </script>
+</body>
+</html>

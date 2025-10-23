@@ -1,0 +1,427 @@
+{
+  "language": "Java",
+  "totalQuestions": 30,
+  "difficulty": "mixed",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Quelle est la différence entre == et .equals() en Java?",
+      "options": [
+        "== compare les références, .equals() compare le contenu",
+        "Aucune différence",
+        "== est plus rapide",
+        "equals() n'existe pas en Java"
+      ],
+      "correctAnswer": 0,
+      "explanation": "== compare les références mémoire (identité), tandis que .equals() compare le contenu logique des objets",
+      "category": "OOP",
+      "difficulty": "easy"
+    },
+    {
+      "id": 2,
+      "question": "Qu'est-ce qu'une classe abstraite?",
+      "options": [
+        "Une classe qui ne peut pas être instanciée",
+        "Une classe sans méthodes",
+        "Une interface",
+        "Une classe finale"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Une classe abstraite ne peut pas être instanciée directement et sert de modèle pour les classes dérivées",
+      "category": "OOP",
+      "difficulty": "medium"
+    },
+    {
+      "id": 3,
+      "question": "Que fait le mot-clé 'final' sur une variable?",
+      "options": [
+        "La rend constante (non modifiable)",
+        "La rend privée",
+        "La rend statique",
+        "La supprime"
+      ],
+      "correctAnswer": 0,
+      "explanation": "final rend une variable constante - sa valeur ne peut plus être modifiée après initialisation",
+      "category": "Keywords",
+      "difficulty": "easy"
+    },
+    {
+      "id": 4,
+      "question": "Quelle est la différence entre ArrayList et LinkedList?",
+      "options": [
+        "ArrayList utilise un tableau, LinkedList une liste chaînée",
+        "Aucune différence",
+        "ArrayList est plus lente",
+        "LinkedList n'existe pas"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ArrayList est basée sur un tableau dynamique (accès rapide par index), LinkedList sur une liste doublement chaînée (insertion/suppression rapide)",
+      "category": "DataStructures",
+      "difficulty": "medium"
+    },
+    {
+      "id": 5,
+      "question": "Qu'est-ce que l'héritage en Java?",
+      "options": [
+        "Une classe fille hérite des propriétés d'une classe parent",
+        "Une méthode appelant une autre méthode",
+        "Un constructeur",
+        "Une interface"
+      ],
+      "correctAnswer": 0,
+      "explanation": "L'héritage permet à une classe (enfant) de réutiliser les propriétés et méthodes d'une autre classe (parent)",
+      "category": "OOP",
+      "difficulty": "easy"
+    },
+    {
+      "id": 6,
+      "question": "Que signifie polymorphisme?",
+      "options": [
+        "Capacité d'un objet à prendre plusieurs formes",
+        "Plusieurs classes",
+        "Plusieurs méthodes",
+        "Plusieurs variables"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Le polymorphisme permet à un objet d'être traité comme une instance de sa classe parent (ex: méthode overriding)",
+      "category": "OOP",
+      "difficulty": "medium"
+    },
+    {
+      "id": 7,
+      "question": "Qu'est-ce qu'une interface en Java?",
+      "options": [
+        "Un contrat définissant des méthodes sans implémentation",
+        "Une classe abstraite",
+        "Un package",
+        "Une annotation"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Une interface définit un contrat (méthodes abstraites) que les classes implémentant l'interface doivent respecter",
+      "category": "OOP",
+      "difficulty": "easy"
+    },
+    {
+      "id": 8,
+      "question": "Quelle est la différence entre String, StringBuilder et StringBuffer?",
+      "options": [
+        "String est immutable, StringBuilder/Buffer sont mutables",
+        "Aucune différence",
+        "String est plus rapide",
+        "StringBuilder n'existe pas"
+      ],
+      "correctAnswer": 0,
+      "explanation": "String est immutable (non modifiable). StringBuilder (non thread-safe) et StringBuffer (thread-safe) sont mutables et plus performants pour concaténations",
+      "category": "Strings",
+      "difficulty": "medium"
+    },
+    {
+      "id": 9,
+      "question": "Que fait le mot-clé 'static'?",
+      "options": [
+        "Rend une variable/méthode accessible sans instance de classe",
+        "Rend une classe abstraite",
+        "Rend une variable finale",
+        "Crée une copie"
+      ],
+      "correctAnswer": 0,
+      "explanation": "static permet d'accéder à une variable ou méthode directement via le nom de la classe, sans créer d'instance",
+      "category": "Keywords",
+      "difficulty": "easy"
+    },
+    {
+      "id": 10,
+      "question": "Qu'est-ce qu'une exception checked vs unchecked?",
+      "options": [
+        "Checked doit être gérée à la compilation, unchecked à l'exécution",
+        "Aucune différence",
+        "Checked est plus rapide",
+        "Unchecked n'existe pas"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Checked exceptions (IOException) doivent être gérées explicitement. Unchecked (RuntimeException) peuvent être ignorées",
+      "category": "ExceptionHandling",
+      "difficulty": "medium"
+    },
+    {
+      "id": 11,
+      "question": "Que fait le bloc try-catch-finally?",
+      "options": [
+        "Gère les exceptions, finally s'exécute toujours",
+        "Crée une boucle",
+        "Définit une condition",
+        "Crée une classe"
+      ],
+      "correctAnswer": 0,
+      "explanation": "try contient le code risqué, catch gère l'exception, finally s'exécute quoi qu'il arrive (nettoyage ressources)",
+      "category": "ExceptionHandling",
+      "difficulty": "easy"
+    },
+    {
+      "id": 12,
+      "question": "Qu'est-ce que le garbage collector?",
+      "options": [
+        "Mécanisme automatique de gestion mémoire",
+        "Une méthode de tri",
+        "Un compilateur",
+        "Un debugger"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Le garbage collector libère automatiquement la mémoire des objets non utilisés (plus de références)",
+      "category": "Memory",
+      "difficulty": "medium"
+    },
+    {
+      "id": 13,
+      "question": "Quelle est la différence entre HashMap et TreeMap?",
+      "options": [
+        "HashMap non ordonné, TreeMap trié par clés",
+        "Aucune différence",
+        "HashMap est plus lent",
+        "TreeMap n'existe pas"
+      ],
+      "correctAnswer": 0,
+      "explanation": "HashMap stocke les paires clé-valeur sans ordre. TreeMap les trie automatiquement par clés (ordre naturel ou comparator)",
+      "category": "Collections",
+      "difficulty": "medium"
+    },
+    {
+      "id": 14,
+      "question": "Qu'est-ce que l'encapsulation?",
+      "options": [
+        "Masquer les données internes d'une classe",
+        "Héritage multiple",
+        "Polymorphisme",
+        "Surcharge de méthodes"
+      ],
+      "correctAnswer": 0,
+      "explanation": "L'encapsulation consiste à rendre les attributs privés et fournir des getters/setters pour y accéder de manière contrôlée",
+      "category": "OOP",
+      "difficulty": "easy"
+    },
+    {
+      "id": 15,
+      "question": "Que fait le mot-clé 'synchronized'?",
+      "options": [
+        "Permet l'accès thread-safe à une méthode/bloc",
+        "Rend une variable finale",
+        "Crée un thread",
+        "Arrête un programme"
+      ],
+      "correctAnswer": 0,
+      "explanation": "synchronized assure qu'un seul thread peut exécuter le code/méthode à la fois (évite race conditions)",
+      "category": "Concurrency",
+      "difficulty": "hard"
+    },
+    {
+      "id": 16,
+      "question": "Qu'est-ce qu'une Lambda expression?",
+      "options": [
+        "Fonction anonyme introduite en Java 8",
+        "Une boucle",
+        "Une classe",
+        "Une annotation"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Lambda (Java 8+) permet d'écrire des fonctions anonymes de manière concise: (params) -> expression",
+      "category": "Java8",
+      "difficulty": "medium"
+    },
+    {
+      "id": 17,
+      "question": "Quelle est la différence entre Comparable et Comparator?",
+      "options": [
+        "Comparable pour tri naturel, Comparator pour tri personnalisé",
+        "Aucune différence",
+        "Comparable est plus rapide",
+        "Comparator n'existe pas"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Comparable (compareTo) définit le tri naturel d'une classe. Comparator (compare) permet un tri custom externe",
+      "category": "Interfaces",
+      "difficulty": "hard"
+    },
+    {
+      "id": 18,
+      "question": "Qu'est-ce qu'un Stream en Java 8?",
+      "options": [
+        "Séquence d'éléments permettant opérations fonctionnelles",
+        "Un fichier",
+        "Une connexion réseau",
+        "Une collection"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Stream API (Java 8) permet d'effectuer des opérations fonctionnelles (map, filter, reduce) sur des collections de manière déclarative",
+      "category": "Java8",
+      "difficulty": "hard"
+    },
+    {
+      "id": 19,
+      "question": "Que fait Optional en Java 8?",
+      "options": [
+        "Conteneur pour valeur potentiellement null",
+        "Une exception",
+        "Une annotation",
+        "Une collection"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Optional<T> encapsule une valeur qui peut être présente ou absente (null), évitant NullPointerException",
+      "category": "Java8",
+      "difficulty": "medium"
+    },
+    {
+      "id": 20,
+      "question": "Qu'est-ce que l'autoboxing?",
+      "options": [
+        "Conversion automatique primitive ↔ wrapper",
+        "Une boucle automatique",
+        "Un garbage collector",
+        "Une annotation"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Autoboxing convertit automatiquement int ↔ Integer, double ↔ Double, etc.",
+      "category": "Types",
+      "difficulty": "easy"
+    },
+    {
+      "id": 21,
+      "question": "Quelle est la différence entre method overloading et overriding?",
+      "options": [
+        "Overloading: même nom différents params, Overriding: redéfinition héritage",
+        "Aucune différence",
+        "Overloading est plus rapide",
+        "Overriding n'existe pas"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Overloading: plusieurs méthodes même nom, paramètres différents (même classe). Overriding: redéfinir méthode parent dans classe fille",
+      "category": "OOP",
+      "difficulty": "medium"
+    },
+    {
+      "id": 22,
+      "question": "Qu'est-ce que le pattern Singleton?",
+      "options": [
+        "Pattern garantissant une seule instance de classe",
+        "Un tri",
+        "Une collection",
+        "Une exception"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Singleton assure qu'une classe n'a qu'une seule instance globale (constructeur privé, getInstance() static)",
+      "category": "DesignPatterns",
+      "difficulty": "hard"
+    },
+    {
+      "id": 23,
+      "question": "Que fait l'annotation @Override?",
+      "options": [
+        "Indique qu'on redéfinit une méthode parent",
+        "Crée une nouvelle méthode",
+        "Supprime une méthode",
+        "Rend une méthode abstraite"
+      ],
+      "correctAnswer": 0,
+      "explanation": "@Override vérifie à la compilation qu'on redéfinit bien une méthode existante du parent (détecte erreurs typo)",
+      "category": "Annotations",
+      "difficulty": "easy"
+    },
+    {
+      "id": 24,
+      "question": "Qu'est-ce qu'une NullPointerException?",
+      "options": [
+        "Exception levée quand on accède à un objet null",
+        "Une erreur de syntaxe",
+        "Une erreur de compilation",
+        "Un warning"
+      ],
+      "correctAnswer": 0,
+      "explanation": "NullPointerException (NPE) survient quand on appelle une méthode ou accède à un champ d'un objet qui vaut null",
+      "category": "Exceptions",
+      "difficulty": "easy"
+    },
+    {
+      "id": 25,
+      "question": "Quelle est la complexité temporelle de recherche dans une HashMap?",
+      "options": [
+        "O(1) en moyenne",
+        "O(n)",
+        "O(log n)",
+        "O(n²)"
+      ],
+      "correctAnswer": 0,
+      "explanation": "HashMap offre une recherche O(1) en moyenne grâce au hashing. O(n) dans le pire cas (collisions)",
+      "category": "Algorithms",
+      "difficulty": "hard"
+    },
+    {
+      "id": 26,
+      "question": "Que fait la méthode equals() de la classe Object?",
+      "options": [
+        "Compare l'égalité logique de deux objets",
+        "Compare les références",
+        "Copie un objet",
+        "Supprime un objet"
+      ],
+      "correctAnswer": 0,
+      "explanation": "equals() compare le contenu logique. Par défaut (Object), elle compare les références, mais souvent redéfinie",
+      "category": "OOP",
+      "difficulty": "medium"
+    },
+    {
+      "id": 27,
+      "question": "Qu'est-ce qu'un constructor en Java?",
+      "options": [
+        "Méthode spéciale pour initialiser un objet",
+        "Une classe",
+        "Une interface",
+        "Une variable"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Le constructeur est appelé automatiquement lors de la création d'un objet (new). Même nom que la classe, pas de type retour",
+      "category": "OOP",
+      "difficulty": "easy"
+    },
+    {
+      "id": 28,
+      "question": "Que fait le mot-clé 'super'?",
+      "options": [
+        "Fait référence à la classe parent",
+        "Crée une classe",
+        "Supprime une classe",
+        "Rend une classe abstraite"
+      ],
+      "correctAnswer": 0,
+      "explanation": "super permet d'accéder aux méthodes/constructeurs de la classe parent depuis la classe fille",
+      "category": "OOP",
+      "difficulty": "easy"
+    },
+    {
+      "id": 29,
+      "question": "Qu'est-ce que le principe SOLID en OOP?",
+      "options": [
+        "5 principes de conception orientée objet",
+        "Un langage de programmation",
+        "Une base de données",
+        "Un framework"
+      ],
+      "correctAnswer": 0,
+      "explanation": "SOLID: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion",
+      "category": "DesignPrinciples",
+      "difficulty": "hard"
+    },
+    {
+      "id": 30,
+      "question": "Quelle est la différence entre public, private, protected et default?",
+      "options": [
+        "Niveaux de visibilité/accessibilité des membres",
+        "Types de variables",
+        "Types de classes",
+        "Types de méthodes"
+      ],
+      "correctAnswer": 0,
+      "explanation": "public: partout, private: classe uniquement, protected: classe + sous-classes, default: package",
+      "category": "AccessModifiers",
+      "difficulty": "medium"
+    }
+  ]
+}

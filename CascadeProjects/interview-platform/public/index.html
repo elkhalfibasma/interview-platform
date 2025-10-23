@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Platform - Préparez vos Interviews Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'navy': '#001F3F',
+                        'slate': '#7F8C8D',
+                        'success': '#27AE60'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        .hero-gradient { background: linear-gradient(135deg, #001F3F 0%, #0A4A6E 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        
+        /* Assurer que les cartes sont visibles */
+        .feature-card {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+        }
+        
+        /* Grid toujours visible */
+        .grid {
+            display: grid !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-sm fixed w-full top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-navy to-blue-800 rounded-lg flex items-center justify-center text-white text-xl">🎯</div>
+                    <span class="text-2xl font-bold text-navy">AI Interview Platform</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="text-slate hover:text-navy transition">Fonctionnalités</a>
+                    <a href="#how-it-works" class="text-slate hover:text-navy transition">Comment ça marche</a>
+                    <a href="login.html" class="text-slate hover:text-navy transition">Connexion</a>
+                    <a href="signup.html" class="bg-navy text-white px-6 py-2 rounded-lg hover:bg-blue-900 transition">S'inscrire</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-gradient text-white pt-32 pb-20 mt-16">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto text-center hero-content">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                    Préparez-vous aux<br><span class="text-success">Interviews Tech</span><br>avec notre AI
+                </h1>
+                <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                    Simulations réalistes d'interviews orales et techniques, feedbacks personnalisés par intelligence artificielle, 
+                    et matching avec les meilleurs recruteurs tech.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4 mb-12">
+                    <a href="signup.html?role=student" class="bg-success hover:bg-green-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition transform hover:scale-105">
+                        🎓 Étudiant
+                    </a>
+                    <a href="signup.html?role=recruiter" class="bg-white text-navy hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-semibold transition transform hover:scale-105">
+                        💼 Recruteur
+                    </a>
+                </div>
+                <div class="grid grid-cols-3 gap-8 max-w-3xl mx-auto pt-8 border-t border-white/20">
+                    <div><div class="text-4xl font-bold text-success">1000+</div><div class="text-gray-300 text-sm">Étudiants</div></div>
+                    <div><div class="text-4xl font-bold text-success">50+</div><div class="text-gray-300 text-sm">Recruteurs</div></div>
+                    <div><div class="text-4xl font-bold text-success">95%</div><div class="text-gray-300 text-sm">Satisfaction</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-navy mb-4">🚀 Fonctionnalités</h2>
+                <p class="text-xl text-slate max-w-2xl mx-auto">Des outils puissants pour réussir vos interviews techniques</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="feature-card card-hover bg-gray-50 rounded-2xl p-8 text-center">
+                    <div class="text-6xl mb-4">🎤</div>
+                    <h3 class="text-2xl font-bold text-navy mb-4">Interviews Orales AI</h3>
+                    <p class="text-slate mb-4">Questions comportementales avec analyse vocale en temps réel et feedback instantané</p>
+                    <ul class="text-sm text-left text-slate space-y-2">
+                        <li>✓ 5 questions comportementales</li>
+                        <li>✓ Reconnaissance vocale</li>
+                        <li>✓ Scores détaillés</li>
+                    </ul>
+                </div>
+                <div class="feature-card card-hover bg-gray-50 rounded-2xl p-8 text-center">
+                    <div class="text-6xl mb-4">💻</div>
+                    <h3 class="text-2xl font-bold text-navy mb-4">Quiz Techniques</h3>
+                    <p class="text-slate mb-4">Testez vos connaissances dans 4 langages de programmation</p>
+                    <ul class="text-sm text-left text-slate space-y-2">
+                        <li>✓ Java (30 questions)</li>
+                        <li>✓ JavaScript, C++, Python</li>
+                        <li>✓ Explications détaillées</li>
+                    </ul>
+                </div>
+                <div class="feature-card card-hover bg-gray-50 rounded-2xl p-8 text-center">
+                    <div class="text-6xl mb-4">📊</div>
+                    <h3 class="text-2xl font-bold text-navy mb-4">Rapports Détaillés</h3>
+                    <p class="text-slate mb-4">Graphiques interactifs et recommandations personnalisées par AI</p>
+                    <ul class="text-sm text-left text-slate space-y-2">
+                        <li>✓ Graphiques Chart.js</li>
+                        <li>✓ Points forts/faibles</li>
+                        <li>✓ Export PDF</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-navy mb-4">⚙️ Comment Ça Marche</h2>
+                <p class="text-xl text-slate max-w-2xl mx-auto">En 3 étapes simples, commencez à pratiquer</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="step-card text-center">
+                    <div class="w-20 h-20 bg-navy text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-6">1</div>
+                    <h3 class="text-2xl font-bold text-navy mb-4">Inscription Gratuite</h3>
+                    <p class="text-slate">Créez votre compte en 2 minutes. Choisissez votre rôle : Étudiant ou Recruteur. 100% gratuit, aucune carte bancaire requise.</p>
+                </div>
+                <div class="step-card text-center">
+                    <div class="w-20 h-20 bg-success text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-6">2</div>
+                    <h3 class="text-2xl font-bold text-navy mb-4">Pratiquez</h3>
+                    <p class="text-slate">Commencez une interview orale ou un quiz technique. L'AI analyse vos réponses en temps réel et vous donne des feedbacks.</p>
+                </div>
+                <div class="step-card text-center">
+                    <div class="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-6">3</div>
+                    <h3 class="text-2xl font-bold text-navy mb-4">Améliorez-vous</h3>
+                    <p class="text-slate">Consultez vos rapports détaillés avec graphiques. Identifiez vos forces et axes d'amélioration pour réussir.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- For Students Section -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="max-w-5xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h2 class="text-4xl font-bold text-navy mb-6">🎓 Pour les Étudiants</h2>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="text-3xl">✅</div>
+                                <div>
+                                    <h3 class="font-bold text-navy text-lg mb-2">Pratiquez sans stress</h3>
+                                    <p class="text-slate">Révisez autant de fois que vous voulez dans un environnement sans jugement</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="text-3xl">✅</div>
+                                <div>
+                                    <h3 class="font-bold text-navy text-lg mb-2">Feedback instantané</h3>
+                                    <p class="text-slate">Recevez des scores et recommandations immédiatement après chaque session</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="text-3xl">✅</div>
+                                <div>
+                                    <h3 class="font-bold text-navy text-lg mb-2">Postulez aux offres</h3>
+                                    <p class="text-slate">Accédez aux offres d'emploi des recruteurs et postulez directement</p>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="signup.html?role=student" class="inline-block mt-8 bg-success hover:bg-green-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition">
+                            Commencer Maintenant →
+                        </a>
+                    </div>
+                    <div class="bg-gradient-to-br from-navy to-blue-700 text-white rounded-3xl p-8">
+                        <h3 class="text-2xl font-bold mb-4">💡 Le Saviez-Vous ?</h3>
+                        <ul class="space-y-3">
+                            <li>📊 82% des candidats améliorent leurs scores après 3 sessions</li>
+                            <li>🎯 Moyenne de 85% de satisfaction</li>
+                            <li>⚡ Résultats instantanés avec AI</li>
+                            <li>🆓 Entièrement gratuit</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- For Recruiters Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="max-w-5xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="bg-gradient-to-br from-purple-600 to-blue-700 text-white rounded-3xl p-8">
+                        <h3 class="text-2xl font-bold mb-4">💼 Avantages Recruteur</h3>
+                        <ul class="space-y-3">
+                            <li>📝 Publiez vos offres gratuitement</li>
+                            <li>👥 Accédez aux profils des candidats</li>
+                            <li>📊 Consultez leurs scores d'interviews</li>
+                            <li>⚡ Gagnez du temps sur le screening</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2 class="text-4xl font-bold text-navy mb-6">💼 Pour les Recruteurs</h2>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="text-3xl">✅</div>
+                                <div>
+                                    <h3 class="font-bold text-navy text-lg mb-2">Créez des offres</h3>
+                                    <p class="text-slate">Publiez vos postes et recevez des candidatures qualifiées</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="text-3xl">✅</div>
+                                <div>
+                                    <h3 class="font-bold text-navy text-lg mb-2">Accédez aux profils</h3>
+                                    <p class="text-slate">Consultez les compétences et scores des candidats</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-4">
+                                <div class="text-3xl">✅</div>
+                                <div>
+                                    <h3 class="font-bold text-navy text-lg mb-2">Tableau de bord</h3>
+                                    <p class="text-slate">Gérez vos offres et candidatures depuis un dashboard intuitif</p>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="signup.html?role=recruiter" class="inline-block mt-8 bg-navy hover:bg-blue-900 text-white px-8 py-4 rounded-lg text-lg font-semibold transition">
+                            Rejoindre →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-navy text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold mb-6">Prêt à Commencer ?</h2>
+            <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+                Rejoignez des centaines d'étudiants et recruteurs qui utilisent déjà notre plateforme
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="signup.html" class="bg-success hover:bg-green-600 text-white px-10 py-4 rounded-lg text-lg font-semibold transition transform hover:scale-105">
+                    S'inscrire Gratuitement 🚀
+                </a>
+                <a href="login.html" class="bg-white text-navy hover:bg-gray-100 px-10 py-4 rounded-lg text-lg font-semibold transition transform hover:scale-105">
+                    Se Connecter
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-navy text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <p class="mb-2">⚠️ <strong>Disclaimer:</strong> Simulations AI à but éducatif uniquement</p>
+            <p>© 2024 AI Interview Platform - 100% Gratuit | Design McKinsey</p>
+        </div>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Hero animation
+        gsap.from('.hero-content', { 
+            opacity: 0, 
+            y: 50, 
+            duration: 1, 
+            ease: 'power3.out' 
+        });
+        
+        // Features cards animation - Afficher toutes les cartes
+        document.addEventListener('DOMContentLoaded', function() {
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach((card, index) => {
+                gsap.from(card, {
+                    scrollTrigger: { 
+                        trigger: card, 
+                        start: 'top 85%',
+                        toggleActions: 'play none none none'
+                    },
+                    opacity: 0, 
+                    y: 50, 
+                    delay: index * 0.15,
+                    duration: 0.6,
+                    ease: 'power2.out',
+                    clearProps: 'all'
+                });
+            });
+        });
+        
+        // How it works steps animation
+        gsap.from('.step-card', {
+            scrollTrigger: { 
+                trigger: '#how-it-works', 
+                start: 'top 80%' 
+            },
+            opacity: 0, 
+            scale: 0.9,
+            stagger: 0.2, 
+            duration: 0.8,
+            ease: 'back.out(1.7)'
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

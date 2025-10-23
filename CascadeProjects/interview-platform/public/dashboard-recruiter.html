@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Recruteur - AI Interview Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-900 to-blue-700 rounded-lg flex items-center justify-center text-white">💼</div>
+                    <span class="text-xl font-bold text-gray-800">Dashboard Recruteur</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="userName" class="text-gray-700">👋 Chargement...</span>
+                    <button onclick="logout()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">Déconnexion</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-8">
+        <!-- Stats Cards -->
+        <div class="grid md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-2xl p-6 shadow-lg stat-card">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="text-4xl">📝</div>
+                    <div class="text-3xl font-bold text-blue-600" id="statJobsCount">0</div>
+                </div>
+                <h3 class="text-gray-600 font-medium">Offres Actives</h3>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 shadow-lg stat-card">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="text-4xl">👥</div>
+                    <div class="text-3xl font-bold text-green-600" id="statApplicationsCount">0</div>
+                </div>
+                <h3 class="text-gray-600 font-medium">Candidatures</h3>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 shadow-lg stat-card">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="text-4xl">👤</div>
+                    <div class="text-3xl font-bold text-purple-600" id="statStudentsCount">0</div>
+                </div>
+                <h3 class="text-gray-600 font-medium">Étudiants Inscrits</h3>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 shadow-lg stat-card">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="text-4xl">📊</div>
+                    <div class="text-3xl font-bold text-orange-600" id="statInterviewsCount">0</div>
+                </div>
+                <h3 class="text-gray-600 font-medium">Interviews Réalisées</h3>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">⚡ Action Principale</h2>
+            <button onclick="showCreateJobModal()" class="w-full p-6 bg-gradient-to-br from-blue-900 to-blue-700 text-white rounded-xl hover:shadow-2xl transition transform hover:scale-105 text-left">
+                <div class="flex items-center space-x-4">
+                    <div class="text-5xl">➕</div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-1">Créer une Offre d'Emploi</h3>
+                        <p class="text-blue-200 text-sm">Publier un nouveau poste pour recruter des talents</p>
+                    </div>
+                </div>
+            </button>
+        </div>
+
+        <!-- Recent Applications -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">👥 Candidatures Récentes</h2>
+            <div id="applicationsContainer" class="space-y-4">
+                <!-- Les candidatures réelles seront chargées ici -->
+                <div class="text-center py-12 text-gray-400">
+                    <div class="text-6xl mb-4">⏳</div>
+                    <p class="text-lg">Chargement des candidatures...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Chart -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">📈 Statistiques Candidats</h2>
+            <div style="height: 300px; position: relative;">
+                <canvas id="statsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Job Modal -->
+    <div id="createJobModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-xl w-full p-6 my-8">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Créer une Offre</h2>
+                <button onclick="closeCreateJobModal()" class="text-gray-500 hover:text-gray-700 text-2xl">✕</button>
+            </div>
+            <form id="createJobForm">
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1 text-sm">Titre du poste *</label>
+                        <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Ex: Senior Java Developer">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1 text-sm">Entreprise *</label>
+                        <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Ex: TechCorp Inc.">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1 text-sm">Localisation *</label>
+                        <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Ex: Paris, France ou Remote">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1 text-sm">Description *</label>
+                        <textarea required rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Description du poste..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-1 text-sm">Compétences requises</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center space-x-2 text-sm">
+                                <input type="checkbox" value="Java" class="rounded">
+                                <span>Java</span>
+                            </label>
+                            <label class="flex items-center space-x-2 text-sm">
+                                <input type="checkbox" value="C++" class="rounded">
+                                <span>C++</span>
+                            </label>
+                            <label class="flex items-center space-x-2 text-sm">
+                                <input type="checkbox" value="JavaScript" class="rounded">
+                                <span>JavaScript</span>
+                            </label>
+                            <label class="flex items-center space-x-2 text-sm">
+                                <input type="checkbox" value="Python" class="rounded">
+                                <span>Python</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 flex gap-3">
+                    <button type="submit" class="flex-1 bg-blue-900 text-white py-2 rounded-lg hover:bg-blue-800 transition text-sm font-medium">Publier l'Offre</button>
+                    <button type="button" onclick="closeCreateJobModal()" class="px-4 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition text-sm">Annuler</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/firebase-config.js"></script>
+    <script>
+        firebase.auth().onAuthStateChanged(async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            const userSnapshot = await firebase.database().ref('users/' + user.uid).once('value');
+            const userData = userSnapshot.val();
+            
+            if (userData.role !== 'recruiter') {
+                window.location.href = 'dashboard-student.html';
+                return;
+            }
+            
+            document.getElementById('userName').textContent = `👋 ${userData.name}`;
+            
+            // Charger les stats dynamiques
+            await loadRecruiterStats(user.uid);
+        });
+
+        async function loadRecruiterStats(recruiterId) {
+            // Charger les offres actives du recruteur
+            const jobsSnapshot = await firebase.database().ref('jobs')
+                .orderByChild('recruiterId').equalTo(recruiterId).once('value');
+            
+            let jobCount = 0;
+            const jobIds = [];
+            jobsSnapshot.forEach(child => {
+                jobCount++;
+                jobIds.push(child.key);
+            });
+            
+            // Compter les candidatures pour les offres du recruteur
+            const applicationsSnapshot = await firebase.database().ref('applications').once('value');
+            let applicationCount = 0;
+            const skillsCount = {};
+            
+            applicationsSnapshot.forEach(child => {
+                const app = child.val();
+                if (jobIds.includes(app.jobId)) {
+                    applicationCount++;
+                }
+            });
+
+            // Charger les utilisateurs pour compter par compétence
+            const usersSnapshot = await firebase.database().ref('users').once('value');
+            usersSnapshot.forEach(child => {
+                const userData = child.val();
+                if (userData.role === 'student' && userData.skills) {
+                    userData.skills.forEach(skill => {
+                        skillsCount[skill] = (skillsCount[skill] || 0) + 1;
+                    });
+                }
+            });
+
+            // Compter les étudiants
+            let studentCount = 0;
+            usersSnapshot.forEach(child => {
+                const userData = child.val();
+                if (userData.role === 'student') {
+                    studentCount++;
+                }
+            });
+
+            // Compter les interviews réalisées
+            const interviewsSnapshot = await firebase.database().ref('interviews').once('value');
+            let interviewCount = 0;
+            interviewsSnapshot.forEach(() => { interviewCount++; });
+
+            // Mettre à jour les stats
+            document.getElementById('statJobsCount').textContent = jobCount;
+            document.getElementById('statApplicationsCount').textContent = applicationCount;
+            document.getElementById('statStudentsCount').textContent = studentCount;
+            document.getElementById('statInterviewsCount').textContent = interviewCount;
+
+            // Créer le graphique avec les vraies données
+            const sortedSkills = Object.entries(skillsCount)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 4);
+
+            const labels = sortedSkills.length > 0 
+                ? sortedSkills.map(([skill]) => skill)
+                : ['Aucune donnée'];
+            const data = sortedSkills.length > 0
+                ? sortedSkills.map(([, count]) => count)
+                : [0];
+
+            const ctx = document.getElementById('statsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Nombre d\'Étudiants',
+                        data: data,
+                        backgroundColor: ['#001F3F', '#27AE60', '#E74C3C', '#F39C12']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Charger les candidatures récentes
+            await loadRecentApplications(jobIds);
+        }
+
+        async function loadRecentApplications(jobIds) {
+            const applicationsSnapshot = await firebase.database().ref('applications')
+                .limitToLast(5).once('value');
+            
+            const applicationsContainer = document.getElementById('applicationsContainer');
+            
+            if (!applicationsSnapshot.exists() || jobIds.length === 0) {
+                applicationsContainer.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <div class="text-6xl mb-4">📭</div>
+                        <p class="text-lg">Aucune candidature pour le moment</p>
+                        <p class="text-sm mt-2">Créez des offres d'emploi pour recevoir des candidatures</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const applications = [];
+            applicationsSnapshot.forEach(child => {
+                const app = child.val();
+                if (jobIds.includes(app.jobId)) {
+                    applications.push({ id: child.key, ...app });
+                }
+            });
+
+            if (applications.length === 0) {
+                applicationsContainer.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <p>Aucune candidature reçue</p>
+                    </div>
+                `;
+                return;
+            }
+
+            applicationsContainer.innerHTML = '';
+            
+            for (const app of applications.slice(0, 2)) {
+                // Charger les infos de l'utilisateur
+                const userSnapshot = await firebase.database().ref('users/' + app.userId).once('value');
+                const userData = userSnapshot.val();
+                
+                if (!userData) continue;
+
+                const initials = userData.name ? userData.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'XX';
+                const colors = ['bg-blue-100 text-blue-800', 'bg-green-100 text-green-800', 'bg-purple-100 text-purple-800'];
+                const colorClass = colors[Math.floor(Math.random() * colors.length)];
+
+                const skillsHTML = (userData.skills || [])
+                    .slice(0, 2)
+                    .map(skill => `<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">${skill}</span>`)
+                    .join('');
+
+                applicationsContainer.innerHTML += `
+                    <div class="border border-gray-200 rounded-xl p-6 flex items-center justify-between hover:shadow-lg transition">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 ${colorClass} rounded-full flex items-center justify-center font-bold text-lg">${initials}</div>
+                            <div>
+                                <h3 class="font-bold text-gray-800">${userData.name || 'Candidat'}</h3>
+                                <p class="text-sm text-gray-600">${userData.email || ''}</p>
+                                <div class="flex gap-2 mt-2">
+                                    ${skillsHTML || '<span class="text-xs text-gray-500">Aucune compétence</span>'}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">✓ Accepter</button>
+                            <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">Voir Profil</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function showCreateJobModal() {
+            document.getElementById('createJobModal').classList.remove('hidden');
+        }
+
+        function closeCreateJobModal() {
+            document.getElementById('createJobModal').classList.add('hidden');
+        }
+
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'login.html';
+            });
+        }
+
+        // Gestionnaire de création d'offre
+        document.getElementById('createJobForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const user = firebase.auth().currentUser;
+            if (!user) return;
+
+            const title = e.target.querySelector('input[placeholder*="Senior"]').value;
+            const company = e.target.querySelector('input[placeholder*="TechCorp"]').value;
+            const location = e.target.querySelector('input[placeholder*="Paris"]').value;
+            const description = e.target.querySelector('textarea').value;
+            
+            const skillsCheckboxes = e.target.querySelectorAll('input[type="checkbox"]:checked');
+            const skills = Array.from(skillsCheckboxes).map(cb => cb.value);
+
+            try {
+                const jobId = Date.now().toString();
+                await firebase.database().ref('jobs/' + jobId).set({
+                    title: title,
+                    company: company,
+                    location: location,
+                    description: description,
+                    languages: skills,
+                    skills: skills,
+                    recruiterId: user.uid,
+                    createdAt: new Date().toISOString(),
+                    status: 'active'
+                });
+
+                alert('✅ Offre créée avec succès !');
+                closeCreateJobModal();
+                e.target.reset();
+                
+                // Recharger les stats
+                const userData = await firebase.database().ref('users/' + user.uid).once('value');
+                await loadRecruiterStats(user.uid);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Erreur lors de la création de l\'offre');
+            }
+        });
+    </script>
+</body>
+</html>

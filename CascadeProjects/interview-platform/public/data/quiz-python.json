@@ -1,0 +1,147 @@
+{
+  "language": "Python",
+  "totalQuestions": 10,
+  "difficulty": "mixed",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Quelle est la différence entre list et tuple?",
+      "options": [
+        "list est mutable, tuple est immutable",
+        "Aucune différence",
+        "tuple est plus rapide",
+        "list n'existe pas"
+      ],
+      "correctAnswer": 0,
+      "explanation": "list [] est mutable (modifiable), tuple () est immutable (non modifiable après création).",
+      "category": "DataStructures",
+      "difficulty": "easy"
+    },
+    {
+      "id": 2,
+      "question": "Qu'est-ce qu'un décorateur?",
+      "options": [
+        "Fonction qui modifie le comportement d'une autre fonction",
+        "Un commentaire décoratif",
+        "Un type de variable",
+        "Une classe"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Un décorateur (@decorator) enveloppe une fonction pour ajouter des fonctionnalités avant/après son exécution.",
+      "category": "Functions",
+      "difficulty": "medium"
+    },
+    {
+      "id": 3,
+      "question": "Que fait *args dans une fonction?",
+      "options": [
+        "Permet un nombre variable d'arguments positionnels",
+        "Multiplie les arguments",
+        "Crée un pointeur",
+        "N'a aucun effet"
+      ],
+      "correctAnswer": 0,
+      "explanation": "*args collecte tous les arguments positionnels dans un tuple. **kwargs fait de même pour les arguments nommés.",
+      "category": "Functions",
+      "difficulty": "easy"
+    },
+    {
+      "id": 4,
+      "question": "Qu'est-ce qu'un generator?",
+      "options": [
+        "Fonction qui utilise yield pour produire des valeurs paresseusement",
+        "Un créateur d'objets",
+        "Un type de boucle",
+        "Une classe abstraite"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Un generator (avec yield) génère des valeurs à la demande sans tout stocker en mémoire, économisant des ressources.",
+      "category": "Iterators",
+      "difficulty": "medium"
+    },
+    {
+      "id": 5,
+      "question": "Quelle est la différence entre == et is?",
+      "options": [
+        "== compare les valeurs, is compare l'identité (adresse mémoire)",
+        "Aucune différence",
+        "is est plus rapide",
+        "== n'existe pas"
+      ],
+      "correctAnswer": 0,
+      "explanation": "== teste l'égalité des valeurs (__eq__), is teste si deux variables pointent vers le même objet en mémoire.",
+      "category": "Operators",
+      "difficulty": "easy"
+    },
+    {
+      "id": 6,
+      "question": "Qu'est-ce qu'une list comprehension?",
+      "options": [
+        "Syntaxe concise pour créer des listes",
+        "Méthode de tri",
+        "Type de boucle",
+        "Une fonction intégrée"
+      ],
+      "correctAnswer": 0,
+      "explanation": "List comprehension: [x**2 for x in range(10) if x % 2 == 0] crée une liste de manière compacte et lisible.",
+      "category": "Syntax",
+      "difficulty": "medium"
+    },
+    {
+      "id": 7,
+      "question": "Que fait le mot-clé 'with'?",
+      "options": [
+        "Gère automatiquement les ressources (context manager)",
+        "Crée une boucle",
+        "Définit une variable",
+        "Importe un module"
+      ],
+      "correctAnswer": 0,
+      "explanation": "with (context manager) garantit la libération des ressources via __enter__ et __exit__ (ex: with open() as f:).",
+      "category": "ContextManagers",
+      "difficulty": "medium"
+    },
+    {
+      "id": 8,
+      "question": "Qu'est-ce que le GIL (Global Interpreter Lock)?",
+      "options": [
+        "Verrou qui permet à un seul thread d'exécuter du code Python",
+        "Un module de sécurité",
+        "Un compilateur",
+        "Une bibliothèque"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Le GIL empêche l'exécution parallèle de threads Python (CPU-bound). Solutions: multiprocessing ou async.",
+      "category": "Concurrency",
+      "difficulty": "hard"
+    },
+    {
+      "id": 9,
+      "question": "Quelle est la différence entre @staticmethod et @classmethod?",
+      "options": [
+        "@classmethod reçoit la classe (cls), @staticmethod ne reçoit rien",
+        "Aucune différence",
+        "@staticmethod est plus rapide",
+        "@classmethod n'existe pas"
+      ],
+      "correctAnswer": 0,
+      "explanation": "@classmethod reçoit la classe comme premier argument (cls). @staticmethod ne reçoit ni self ni cls.",
+      "category": "OOP",
+      "difficulty": "medium"
+    },
+    {
+      "id": 10,
+      "question": "Qu'est-ce que duck typing?",
+      "options": [
+        "Si ça marche comme un canard, c'est un canard (typage dynamique)",
+        "Un type de variable",
+        "Une méthode de débogage",
+        "Un pattern de design"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Duck typing: Python se soucie de ce qu'un objet peut faire (méthodes) plutôt que de son type exact.",
+      "category": "Typing",
+      "difficulty": "hard"
+    }
+  ]
+}

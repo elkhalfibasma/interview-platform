@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport Quiz Technique - AI Interview Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2 { font-family: 'Playfair Display', serif; }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-blue-50 min-h-screen">
+    <nav class="bg-white shadow-sm no-print">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="dashboard-student.html" class="text-gray-600 hover:text-gray-800">← Retour au Dashboard</a>
+                <button onclick="window.print()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                    📄 Télécharger PDF
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-12 max-w-6xl">
+        <div class="bg-white rounded-3xl shadow-2xl p-12">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <div class="text-6xl mb-4">💻</div>
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">Rapport Quiz Technique</h1>
+                <p class="text-gray-600 text-lg">Langage: <span id="language" class="font-bold"></span></p>
+                <p class="text-sm text-gray-500 mt-2" id="reportDate"></p>
+            </div>
+
+            <!-- Overall Score -->
+            <div class="mb-12 text-center">
+                <div class="inline-block p-8 bg-gradient-to-br from-green-600 to-blue-700 rounded-3xl text-white">
+                    <div class="text-lg font-semibold mb-2">Score Final</div>
+                    <div class="text-7xl font-bold" id="finalScore">--</div>
+                    <div class="text-xl mt-2">%</div>
+                </div>
+                <div class="mt-4 text-gray-600">
+                    <span id="correctCount">--</span> réponses correctes sur <span id="totalCount">--</span>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">📊 Scores par Catégorie</h2>
+                    <canvas id="categoryChart" height="250"></canvas>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">🎯 Répartition Réponses</h2>
+                    <canvas id="pieChart" height="250"></canvas>
+                </div>
+            </div>
+
+            <!-- Performance by Category -->
+            <div class="mb-12">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">📈 Performance Détaillée</h2>
+                <div id="categoriesDetail" class="space-y-4">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Question Review -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">🔍 Revue des Questions</h2>
+                <div class="mb-4 flex gap-2 no-print">
+                    <button onclick="filterQuestions('all')" class="filter-btn px-4 py-2 bg-blue-600 text-white rounded-lg">Toutes</button>
+                    <button onclick="filterQuestions('correct')" class="filter-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">Correctes</button>
+                    <button onclick="filterQuestions('incorrect')" class="filter-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg">Incorrectes</button>
+                </div>
+                <div id="questionsReview" class="space-y-6">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">💡 Recommandations</h2>
+                <div class="bg-blue-50 rounded-xl p-6">
+                    <div id="recommendations" class="space-y-4 text-gray-800">
+                        <p>Chargement...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="text-center no-print">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Prochaines Étapes</h2>
+                <div class="flex justify-center gap-4">
+                    <a href="interview-tech.html" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                        🔄 Refaire un Quiz
+                    </a>
+                    <a href="interview-oral.html" class="px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition">
+                        🎤 Interview Orale
+                    </a>
+                    <a href="dashboard-student.html" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                        🏠 Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="mt-12 p-4 bg-gray-100 rounded-xl text-center text-sm text-gray-600">
+                ⚠️ <strong>Disclaimer:</strong> Cette évaluation AI est à but éducatif. Continuez à pratiquer pour améliorer vos compétences.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const result = JSON.parse(localStorage.getItem('lastQuizResult') || '{}');
+        const quizData = JSON.parse(localStorage.getItem('lastQuizData') || '{}');
+        let currentFilter = 'all';
+
+        if (result.score) {
+            document.getElementById('finalScore').textContent = result.score;
+            document.getElementById('correctCount').textContent = result.correctCount;
+            document.getElementById('totalCount').textContent = result.totalQuestions;
+            document.getElementById('language').textContent = result.language.toUpperCase();
+        }
+
+        document.getElementById('reportDate').textContent = new Date().toLocaleDateString('fr-FR', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        // Category Chart
+        if (result.categoryScores) {
+            const categories = Object.keys(result.categoryScores);
+            const percentages = categories.map(cat => 
+                Math.round((result.categoryScores[cat].correct / result.categoryScores[cat].total) * 100)
+            );
+
+            const ctxCat = document.getElementById('categoryChart').getContext('2d');
+            new Chart(ctxCat, {
+                type: 'bar',
+                data: {
+                    labels: categories,
+                    datasets: [{
+                        label: 'Score (%)',
+                        data: percentages,
+                        backgroundColor: '#27AE60',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, max: 100 } }
+                }
+            });
+
+            // Populate categories detail
+            const categoriesDetail = document.getElementById('categoriesDetail');
+            categoriesDetail.innerHTML = categories.map(cat => {
+                const perc = percentages[categories.indexOf(cat)];
+                const color = perc >= 80 ? 'green' : perc >= 60 ? 'yellow' : 'red';
+                return `
+                    <div class="bg-gray-50 rounded-xl p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="font-bold text-gray-800">${cat}</h3>
+                            <span class="text-2xl font-bold text-${color}-600">${perc}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-${color}-600 h-2 rounded-full" style="width: ${perc}%"></div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-2">
+                            ${result.categoryScores[cat].correct}/${result.categoryScores[cat].total} questions correctes
+                        </p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Pie Chart
+        const ctxPie = document.getElementById('pieChart').getContext('2d');
+        new Chart(ctxPie, {
+            type: 'doughnut',
+            data: {
+                labels: ['Correctes', 'Incorrectes'],
+                datasets: [{
+                    data: [result.correctCount || 0, (result.totalQuestions || 0) - (result.correctCount || 0)],
+                    backgroundColor: ['#27AE60', '#E74C3C']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Questions Review
+        function renderQuestions(filter) {
+            const reviewDiv = document.getElementById('questionsReview');
+            if (!quizData.questions) return;
+
+            const filtered = quizData.questions.filter((q, i) => {
+                if (filter === 'all') return true;
+                const isCorrect = result.userAnswers[i] === q.correctAnswer;
+                return filter === 'correct' ? isCorrect : !isCorrect;
+            });
+
+            reviewDiv.innerHTML = filtered.map((q, originalIndex) => {
+                const userAnswerIndex = result.userAnswers[quizData.questions.indexOf(q)];
+                const isCorrect = userAnswerIndex === q.correctAnswer;
+                const bgColor = isCorrect ? 'green-50' : 'red-50';
+                const borderColor = isCorrect ? 'green-300' : 'red-300';
+
+                return `
+                    <div class="border-2 border-${borderColor} bg-${bgColor} rounded-xl p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="px-2 py-1 bg-white rounded text-xs font-medium">${q.category}</span>
+                                    <span class="px-2 py-1 bg-white rounded text-xs">${q.difficulty}</span>
+                                </div>
+                                <h3 class="font-bold text-gray-800 text-lg">${q.question}</h3>
+                            </div>
+                            <div class="text-3xl ml-4">${isCorrect ? '✅' : '❌'}</div>
+                        </div>
+                        <div class="space-y-2 mb-4">
+                            ${q.options.map((opt, i) => {
+                                let classes = 'p-3 rounded-lg ';
+                                if (i === q.correctAnswer) classes += 'bg-green-200 border-2 border-green-600 font-bold';
+                                else if (i === userAnswerIndex && !isCorrect) classes += 'bg-red-200 border-2 border-red-600';
+                                else classes += 'bg-white';
+                                return `<div class="${classes}">${opt}</div>`;
+                            }).join('')}
+                        </div>
+                        <div class="bg-white rounded-lg p-4">
+                            <p class="text-sm text-gray-800"><strong>Explication:</strong> ${q.explanation}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterQuestions(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.className = 'filter-btn px-4 py-2 rounded-lg transition';
+                btn.classList.add(btn.textContent.toLowerCase().includes(filter === 'all' ? 'toutes' : filter) ? 
+                    'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700');
+            });
+            renderQuestions(filter);
+        }
+
+        renderQuestions('all');
+
+        // Generate recommendations
+        const recs = document.getElementById('recommendations');
+        const weakCategories = Object.keys(result.categoryScores || {}).filter(cat => 
+            (result.categoryScores[cat].correct / result.categoryScores[cat].total) < 0.7
+        );
+
+        if (weakCategories.length > 0) {
+            recs.innerHTML = `
+                <p class="font-bold mb-2">🎯 Catégories à améliorer:</p>
+                <ul class="space-y-2 ml-4">
+                    ${weakCategories.map(cat => `<li>• <strong>${cat}</strong> - Révisez les concepts fondamentaux</li>`).join('')}
+                </ul>
+                <p class="mt-4">📚 Recommandations: Pratiquez avec des exercices ciblés sur ces sujets.</p>
+            `;
+        } else {
+            recs.innerHTML = '<p>🎉 Excellent travail! Continuez à pratiquer pour maintenir votre niveau.</p>';
+        }
+    </script>
+</body>
+</html>

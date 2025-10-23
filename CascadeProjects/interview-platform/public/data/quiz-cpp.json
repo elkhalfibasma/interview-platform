@@ -1,0 +1,147 @@
+{
+  "language": "C++",
+  "totalQuestions": 10,
+  "difficulty": "mixed",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Qu'est-ce qu'un pointeur en C++?",
+      "options": [
+        "Variable qui stocke l'adresse mémoire d'une autre variable",
+        "Un type de boucle",
+        "Une fonction",
+        "Un objet"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Un pointeur contient l'adresse mémoire d'une variable, permettant l'accès indirect: int* ptr = &variable;",
+      "category": "Pointers",
+      "difficulty": "easy"
+    },
+    {
+      "id": 2,
+      "question": "Quelle est la différence entre struct et class?",
+      "options": [
+        "struct: membres publics par défaut, class: privés par défaut",
+        "Aucune différence",
+        "struct ne peut pas avoir de méthodes",
+        "class est plus rapide"
+      ],
+      "correctAnswer": 0,
+      "explanation": "La seule différence: struct a des membres publics par défaut, class a des membres privés par défaut.",
+      "category": "OOP",
+      "difficulty": "medium"
+    },
+    {
+      "id": 3,
+      "question": "Qu'est-ce que la STL?",
+      "options": [
+        "Standard Template Library (conteneurs, algorithmes)",
+        "Un compilateur",
+        "Un IDE",
+        "Un système d'exploitation"
+      ],
+      "correctAnswer": 0,
+      "explanation": "STL fournit des conteneurs (vector, map, set), des itérateurs et des algorithmes génériques.",
+      "category": "STL",
+      "difficulty": "easy"
+    },
+    {
+      "id": 4,
+      "question": "Qu'est-ce qu'un smart pointer?",
+      "options": [
+        "Pointeur qui gère automatiquement la mémoire",
+        "Un pointeur plus rapide",
+        "Un pointeur vers une fonction",
+        "Un pointeur constant"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Smart pointers (unique_ptr, shared_ptr, weak_ptr) gèrent automatiquement la désallocation mémoire via RAII.",
+      "category": "Memory",
+      "difficulty": "hard"
+    },
+    {
+      "id": 5,
+      "question": "Que fait le mot-clé 'virtual'?",
+      "options": [
+        "Permet le polymorphisme dynamique",
+        "Crée une variable virtuelle",
+        "Optimise le code",
+        "Rend une fonction inline"
+      ],
+      "correctAnswer": 0,
+      "explanation": "virtual permet l'override de méthodes dans les classes dérivées et active le polymorphisme via vtables.",
+      "category": "OOP",
+      "difficulty": "medium"
+    },
+    {
+      "id": 6,
+      "question": "Qu'est-ce que RAII?",
+      "options": [
+        "Resource Acquisition Is Initialization",
+        "Random Access Iterative Interface",
+        "Recursive Algorithm Implementation",
+        "Runtime Array Initialization"
+      ],
+      "correctAnswer": 0,
+      "explanation": "RAII: les ressources sont acquises dans le constructeur et libérées dans le destructeur automatiquement.",
+      "category": "DesignPrinciples",
+      "difficulty": "hard"
+    },
+    {
+      "id": 7,
+      "question": "Quelle est la différence entre new et malloc?",
+      "options": [
+        "new appelle le constructeur, malloc n'alloue que la mémoire",
+        "Aucune différence",
+        "malloc est plus rapide",
+        "new n'existe pas en C++"
+      ],
+      "correctAnswer": 0,
+      "explanation": "new alloue ET construit l'objet. malloc alloue uniquement la mémoire brute sans appeler le constructeur.",
+      "category": "Memory",
+      "difficulty": "medium"
+    },
+    {
+      "id": 8,
+      "question": "Qu'est-ce qu'un template?",
+      "options": [
+        "Fonction/classe générique paramétrée par type",
+        "Un modèle de design",
+        "Une classe abstraite",
+        "Un fichier header"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Les templates permettent la programmation générique: template<typename T> class MyClass {...}",
+      "category": "Templates",
+      "difficulty": "medium"
+    },
+    {
+      "id": 9,
+      "question": "Que fait const après une méthode de classe?",
+      "options": [
+        "Indique que la méthode ne modifie pas l'objet",
+        "Rend la méthode constante",
+        "Optimise la méthode",
+        "N'a aucun effet"
+      ],
+      "correctAnswer": 0,
+      "explanation": "const après une méthode (void func() const) garantit qu'elle ne modifie aucun membre de l'objet.",
+      "category": "OOP",
+      "difficulty": "easy"
+    },
+    {
+      "id": 10,
+      "question": "Qu'est-ce que le move semantics (C++11)?",
+      "options": [
+        "Transfert de ressources au lieu de copie",
+        "Déplacement d'objets en mémoire",
+        "Une optimisation du compilateur",
+        "Un type de pointeur"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Move semantics (std::move, rvalue references) permettent de transférer la propriété des ressources sans copie coûteuse.",
+      "category": "Modern C++",
+      "difficulty": "hard"
+    }
+  ]
+}

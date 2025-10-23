@@ -1,0 +1,108 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    
+    function isRecruiter() {
+      return isAuthenticated() && getUserRole() == 'recruiter';
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      // Users can read/write their own data
+      allow read, write: if isOwner(userId);
+      
+      // Recruiters can read student profiles (limited fields)
+      allow read: if isRecruiter();
+    }
+    
+    // Jobs collection
+    match /jobs/{jobId} {
+      // Anyone authenticated can read jobs
+      allow read: if isAuthenticated();
+      
+      // Only recruiters can create/update/delete jobs
+      allow create, update, delete: if isRecruiter() && 
+        request.resource.data.recruiterId == request.auth.uid;
+    }
+    
+    // Interviews collection
+    match /interviews/{interviewId} {
+      // Users can only access their own interviews
+      allow read, write: if isAuthenticated() && 
+        resource.data.userId == request.auth.uid;
+      
+      // Recruiters can read interviews for their jobs
+      allow read: if isRecruiter();
+    }
+    
+    // Reports collection
+    match /reports/{reportId} {
+      // Users can only read their own reports
+      allow read: if isAuthenticated() && 
+        resource.data.userId == request.auth.uid;
+      
+      // Reports are created by the system
+      allow create: if isAuthenticated();
+      
+      // Recruiters can read reports for their interviews
+      allow read: if isRecruiter();
+    }
+    
+    // Quizzes collection
+    match /quizzes/{quizId} {
+      // Anyone can read quizzes
+      allow read: if isAuthenticated();
+      
+      // Only recruiters can create/update quizzes
+      allow create, update: if isRecruiter();
+    }
+    
+    // Applications collection
+    match /applications/{applicationId} {
+      // Users can read their own applications
+      allow read: if isAuthenticated() && 
+        resource.data.userId == request.auth.uid;
+      
+      // Users can create applications
+      allow create: if isAuthenticated() && 
+        request.resource.data.userId == request.auth.uid;
+      
+      // Recruiters can read applications for their jobs
+      allow read: if isRecruiter();
+      
+      // Recruiters can update application status
+      allow update: if isRecruiter() && 
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']);
+    }
+    
+    // Appointments collection
+    match /appointments/{appointmentId} {
+      // Both student and recruiter can read their appointments
+      allow read: if isAuthenticated() && (
+        resource.data.studentId == request.auth.uid ||
+        resource.data.recruiterId == request.auth.uid
+      );
+      
+      // Students can create appointments
+      allow create: if isAuthenticated() && 
+        request.resource.data.studentId == request.auth.uid;
+      
+      // Recruiters can update appointment status
+      allow update: if isAuthenticated() && 
+        resource.data.recruiterId == request.auth.uid;
+    }
+  }
+}
